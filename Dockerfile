@@ -1,7 +1,10 @@
 FROM maven:3.9.9-eclipse-temurin-11 AS BUILD_IMAGE
-RUN apt update && apt install maven -y
-COPY ./ vprofile-project
-RUN cd vprofile-project &&  mvn install 
+# Set a clear working directory
+WORKDIR /vprofile-project
+# Copy the project into the image
+COPY . .
+# Build the app (skip tests if you want faster builds)
+RUN mvn clean package -DskipTests
 
 FROM tomcat:9.0-jdk11-temurin
 LABEL "Project"="Vprofile"
